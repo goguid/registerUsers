@@ -1,10 +1,13 @@
 package cl.muruna.registerUsers.model;
 
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 
 //import java.util.UUID;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,7 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="phones")
+@Table(name="phonesusers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,14 +32,21 @@ import lombok.NoArgsConstructor;
 public class Phone {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    @ManyToOne
-    @JoinColumn(name = "user_uuid")
-    private User user;
-    @NotBlank(message = "Please add number ")
+    @NotBlank(message = "Please add a number ")
     private String number;
+
+    @NotBlank(message = "Please add a city code ")
     private String citycode;
-    private String countrycode;    
+
+    @NotBlank(message = "Please add a country code ")
+    private String countrycode;
+    
+    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @JsonBackReference
+    @JoinColumn(name = "user_uuid", nullable = false )
+    private User user;
+    
 }
